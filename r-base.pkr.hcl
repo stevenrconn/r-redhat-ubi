@@ -1,25 +1,11 @@
-packer {
-  required_plugins {
-    docker = {
-      source  = "github.com/hashicorp/docker"
-      version = "~> 1"
-    }
-  }
-}
-
 variable "cran_packages" {
     type = string
     description = "REQUIRED: space-separated list of CRAN package names to be installed"
-    default = "<DEFINE ME!>"    
+    default = "<DEFINE ME!>"
 }
 
 local "r_library_xz" {
     expression = "${path.root}/r_library.${uuidv4()}.tar.xz"
-}
-
-source "docker" "rhel9-ubi" {
-    image = "registry.access.redhat.com/ubi9/ubi:latest"
-    pull = true
 }
 
 build {
@@ -33,7 +19,7 @@ build {
             "set -o xtrace errexit",
             "dnf --assumeyes --allowerasing upgrade",
             "dnf --assumeyes --allowerasing install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm",
-            "dnf --assumeyes --allowerasing --enablerepo codeready-builder-for-rhel-9-$(arch)-rpms install R-base R-devel xz"
+            "dnf --assumeyes --allowerasing --enablerepo codeready-builder-for-rhel-9-$(arch)-rpms install R-base R-devel xz diffutils"
         ]
     }
 
@@ -56,8 +42,7 @@ build {
 
 build {
     source "source.docker.rhel9-ubi" {
-        name = "build_image"
-        # export_path = "${path.root}/r-base.tar"
+        name = "build_base"
         commit = true
         changes = [
             "LABEL version=0.0.0 MAINTAINER=steven.conn@gmail.com",
