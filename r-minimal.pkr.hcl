@@ -1,12 +1,8 @@
 build {
+    name = "build_minimal"
+
     source "source.docker.rhel9-ubi" {
-        name = "build_minimal"
         commit = true
-        changes = [
-            "LABEL version=0.0.0 MAINTAINER=steven.conn@gmail.com",
-            "ONBUILD RUN date",
-            "ENTRYPOINT R"
-        ]
     }
 
     provisioner "shell" {

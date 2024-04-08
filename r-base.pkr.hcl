@@ -9,8 +9,9 @@ local "r_library_xz" {
 }
 
 build {
+    name = "install_cran_packages"
+
     source "source.docker.rhel9-ubi" {
-        name = "install_cran_packages"
         discard = true
     }
 
@@ -41,14 +42,10 @@ build {
 }
 
 build {
+    name = "build_base"
+
     source "source.docker.rhel9-ubi" {
-        name = "build_base"
         commit = true
-        changes = [
-            "LABEL version=0.0.0 MAINTAINER=steven.conn@gmail.com",
-            "ONBUILD RUN date",
-            "ENTRYPOINT R"
-        ]
     }
 
     provisioner "shell" {
